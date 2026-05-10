@@ -1,0 +1,95 @@
+# Rattler-build v1 recipe for Eclipse Temurin JRE (pre-built binaries)
+# Adapted from conda-forge/staged-recipes PR #29085
+# This is a personal repackaging for prefix.dev channels.
+
+context:
+  version: "17.0.14"
+  build_number: "7"
+  version_underscore: "17.0.14_7"
+  base_url: "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${{ version }}%2B${{ build_number }}/OpenJDK17U-jre_"
+
+package:
+  name: temurin-jre
+  version: ${{ version }}.${{ build_number }}
+
+source:
+  - if: linux and aarch64
+    url: ${{ base_url }}aarch64_linux_hotspot_${{ version_underscore }}.tar.gz
+    sha256: bab3f352fc7144ac1435924f056872d16f4b32c8bcda58b9a77b636eb1c664f4
+  - if: linux and x86_64
+    url: ${{ base_url }}x64_linux_hotspot_${{ version_underscore }}.tar.gz
+    sha256: a4b0015872758aac6a5d17139e952a3951ee536ae6d9a99828823a80a71add56
+  - if: osx and arm64
+    url: ${{ base_url }}aarch64_mac_hotspot_${{ version_underscore }}.tar.gz
+    sha256: 6921193269a32c394fd6d8bb6583e3798810c2b24f122b56ebe85bafd94fc784
+  - if: osx and x86_64
+    url: ${{ base_url }}x64_mac_hotspot_${{ version_underscore }}.tar.gz
+    sha256: f2c7454f7aba076cd414887b31da92e4a50fda7a13d97f6e295c911af60de0b6
+  - if: win
+    url: ${{ base_url }}x64_windows_hotspot_${{ version_underscore }}.zip
+    sha256: d42f84605c8e27c38998b44ac493d1067abbe45be89969c935d71a858393405c
+
+build:
+  number: 0
+  script:
+    - ${{ "build.sh" if unix }}
+    - ${{ "bld.bat" if win }}
+  missing_dso_whitelist:
+    - "*/libc.*"
+    - "*/libdl.*"
+    - "*/libm.*"
+    - "*/libpthread.*"
+    - "*/librt.*"
+    - "*/ld-linux-x86-64.*"
+    - "*/libutil.*"
+    - "*/libfreetype.*"
+    - "*/libX11.*"
+    - "*/libXext.*"
+    - "*/libasound.*"
+    - "*/libXi.*"
+    - "*/libXrender.*"
+    - "*/libXtst.*"
+    - "*/jvm.dll"
+    - "*/java.dll"
+    - "*/VCRUNTIME140.dll"
+    - "*/VCRUNTIME140_1.dll"
+    - "*/MSVCP140.dll"
+    - "*/jli.dll"
+    - "*/awt.dll"
+    - "*/net.dll"
+    - "*/jawt.dll"
+
+requirements:
+  build:
+    - if: win
+      then:
+        - m2-bash
+  run:
+    - freetype
+
+tests:
+  - script:
+      - java -version
+      - if: unix
+        then:
+          - $JAVA_HOME/bin/java -version
+      - if: win
+        then:
+          - '"%JAVA_HOME%\\bin\\java.exe" -version'
+
+about:
+  summary: Eclipse Temurin OpenJDK-based Java Runtime Environment
+  description: |
+    The Eclipse Temurin project provides code and processes that support the
+    building of runtime binaries and associated technologies that are high
+    performance, enterprise-caliber, cross-platform, open-source licensed,
+    and Java SE TCK-tested for general use across the Java ecosystem.
+    This package repackages the official pre-built JRE binaries from Adoptium.
+  license: GPL-2.0 WITH Classpath-exception-2.0
+  license_file: NOTICE
+  homepage: https://adoptium.net/temurin/
+  repository: https://github.com/adoptium/temurin17-binaries
+
+extra:
+  recipe-maintainers:
+    - jfouret
