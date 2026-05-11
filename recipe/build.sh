@@ -38,11 +38,31 @@ done
 export JAVA_HOME="${PREFIX}/opt/temurin"
 export PATH="${JAVA_HOME}/bin:${PATH}"
 
-echo "Verifying installation..."
-java -version
+# Detect cross-compilation (SUBDIR is set by rattler-build to the target platform)
+host_arch=$(uname -m)
+target_arch="${SUBDIR##*-}"
 
-echo "Creating CDS archive..."
-java -Xshare:dump || true
+case "$host_arch" in
+    x86_64)         normalized_host="x86_64" ;;
+    aarch64|arm64)  normalized_host="aarch64" ;;
+    armv7l)         normalized_host="armv7l" ;;
+    *)              normalized_host="$host_arch" ;;
+esac
+
+case "$target_arch" in
+    64)     normalized_target="x86_64" ;;
+    arm64)  normalized_target="aarch64" ;;
+    *)      normalized_target="$target_arch" ;;
+esac
+
+echo "Verifying installation..."
+if [ "$normalized_host" = "$normalized_target" ]; then
+    java -version
+    echo "Creating CDS archive..."
+    java -Xshare:dump || true
+else
+    echo "Cross-compilation detected ($normalized_host -> $normalized_target). Skipping Java verification."
+fi
 
 # Remove X11/graphics-related libraries for a headless-like JRE
 if [ "$(uname -s)" == "Darwin" ]; then

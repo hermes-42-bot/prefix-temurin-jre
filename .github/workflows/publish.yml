@@ -23,6 +23,9 @@ jobs:
             target-platform: linux-64
           - os: ubuntu-24.04-arm
             target-platform: linux-aarch64
+          - os: ubuntu-latest
+            target-platform: linux-armv7l
+            extra-args: "--test skip"
           - os: macos-latest
             target-platform: osx-64
           - os: macos-latest
@@ -38,7 +41,7 @@ jobs:
         uses: prefix-dev/rattler-build-action@v0.2.37
         with:
           recipe-path: recipe/recipe.yaml
-          build-args: --target-platform ${{ matrix.target-platform }}
+          build-args: --target-platform ${{ matrix.target-platform }} ${{ matrix.extra-args }}
           upload-artifact: false
 
       - name: Publish to prefix.dev

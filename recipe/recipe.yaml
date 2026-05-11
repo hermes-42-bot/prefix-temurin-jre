@@ -18,10 +18,22 @@ source:
     then:
       url: ${{ base_url }}x64_linux_hotspot_${{ version_underscore }}.tar.gz
       sha256: adb5a2364baa51de1ef91bb9911f5a61d24b045fe1d6647cb8050272a3a8ee75
+  - if: linux and aarch64
+    then:
+      url: ${{ base_url }}aarch64_linux_hotspot_${{ version_underscore }}.tar.gz
+      sha256: aae834297a87736869745be7c1fca3207ea9167c5824f41c88b0ebb2e3ccb9b1
+  - if: linux and armv7l
+    then:
+      url: ${{ base_url }}arm_linux_hotspot_${{ version_underscore }}.tar.gz
+      sha256: 018d1f5c11b2f1a2175c282a0fe8a17d9166da84b70ec1c60c1fa628a261d1eb
   - if: osx and x86_64
     then:
       url: ${{ base_url }}x64_mac_hotspot_${{ version_underscore }}.tar.gz
       sha256: 91bbd07b9c65d9ecbe1fa0081b3c1ad549ed34ed21085a72fdb76598a740b54c
+  - if: osx and arm64
+    then:
+      url: ${{ base_url }}aarch64_mac_hotspot_${{ version_underscore }}.tar.gz
+      sha256: cef790b404cf168fd1a8a7abc5054fbb442c7d4bfe390cceccfe3f64b9b776a9
   - if: win
     then:
       url: ${{ base_url }}x64_windows_hotspot_${{ version_underscore }}.zip
