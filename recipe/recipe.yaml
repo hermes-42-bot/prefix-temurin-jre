@@ -28,7 +28,7 @@ source:
       sha256: 79a598e1fbb4e16582d92c4ee22280a3c4d72fd52606e1e46b1223c0fe53b0da
 
 build:
-  number: 1
+  number: 0
   script:
     - if: win
       then: bld.bat
