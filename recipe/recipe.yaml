@@ -1,6 +1,9 @@
-# Rattler-build v1 recipe for Eclipse Temurin JRE (pre-built binaries)
+# Rattler-build v1 multi-output recipe for Eclipse Temurin JRE (pre-built binaries)
 # Adapted from conda-forge/staged-recipes PR #29085
-# This is a personal repackaging for prefix.dev channels.
+# Outputs:
+#   - temurin-jre-headless: headless JRE (X11/Swing libs stripped)
+#   - temurin-jre:           metapackage (alias for headless)
+#   - temurin-jre-graphics:  restores X11/Swing libs (Unix only)
 
 context:
   full_version: "17.0.19+10"
@@ -9,7 +12,7 @@ context:
   version_underscore: "${{version}}_${{build_number}}"
   base_url: "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${{ version }}%2B${{ build_number }}/OpenJDK17U-jre_"
 
-package:
+recipe:
   name: temurin-jre
   version: ${{ version }}.${{ build_number }}
 
@@ -41,10 +44,6 @@ source:
 
 build:
   number: 0
-  script:
-    - if: win
-      then: bld.bat
-      else: build.sh
   prefix_detection:
     ignore_binary_files: true
   dynamic_linking:
@@ -75,27 +74,6 @@ build:
       - "*/net.dll"
       - "*/jawt.dll"
 
-requirements:
-  build:
-  run:
-    - if: linux
-      then: libgcc-ng
-    - if: osx
-      then: libcxx
-    - if: win
-      then: ucrt
-    - freetype
-
-tests:
-  - script:
-      - java -version
-      - if: unix
-        then:
-          - $JAVA_HOME/bin/java -version
-      - if: win
-        then:
-          - '"%JAVA_HOME%\\bin\\java.exe" -version'
-
 about:
   summary: Eclipse Temurin OpenJDK-based Java Runtime Environment
   description: |
@@ -112,3 +90,62 @@ about:
 extra:
   recipe-maintainers:
     - jfouret
+
+tests:
+  - script:
+      - java -version
+      - if: unix
+        then:
+          - $JAVA_HOME/bin/java -version
+      - if: win
+        then:
+          - '"%JAVA_HOME%\\bin\\java.exe" -version'
+
+outputs:
+  - package:
+      name: temurin-jre-headless
+    build:
+      script:
+        - if: win
+          then: bld.bat
+          else: build.sh
+    requirements:
+      run:
+        - if: linux
+          then: libgcc-ng
+        - if: osx
+          then: libcxx
+        - if: win
+          then: ucrt
+        - freetype
+
+  - package:
+      name: temurin-jre
+    requirements:
+      run:
+        - ${{ pin_subpackage('temurin-jre-headless', exact=True) }}
+
+  - package:
+      name: temurin-jre-graphics
+    build:
+      script:
+        - if: win
+          then: bld_graphics.bat
+          else: build_graphics.sh
+    requirements:
+      run:
+        - ${{ pin_subpackage('temurin-jre-headless', exact=True) }}
+        - if: linux
+          then: alsa-lib
+        - if: unix
+          then: xorg-libx11
+        - if: unix
+          then: xorg-libxext
+        - if: unix
+          then: xorg-libxt
+        - if: unix
+          then: xorg-libxtst
+        - if: unix
+          then: xorg-libxrender
+        - if: unix
+          then: xorg-libxi
