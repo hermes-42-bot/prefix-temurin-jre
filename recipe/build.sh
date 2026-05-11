@@ -17,6 +17,10 @@ else
     ARCHIVE_PATH=""
 fi
 
+if [ "$(uname -s)" == "Darwin" ]; then
+    cp "${ARCHIVE_PATH}NOTICE" ./NOTICE
+fi
+
 echo "Copying JRE files..."
 for ITEM in bin conf legal lib NOTICE release; do
     if [ -e "${ARCHIVE_PATH}${ITEM}" ]; then
