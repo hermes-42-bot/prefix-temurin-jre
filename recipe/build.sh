@@ -38,7 +38,7 @@ done
 export JAVA_HOME="${PREFIX}/opt/temurin"
 export PATH="${JAVA_HOME}/bin:${PATH}"
 
-# Detect cross-compilation (SUBDIR is set by rattler-build to the target platform)
+# Detect cross-compilation ( rattler-build sets SUBDIR to the target platform )
 host_arch=$(uname -m)
 target_arch="${SUBDIR##*-}"
 
