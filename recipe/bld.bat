@@ -23,7 +23,7 @@ echo "Creating bin directory..."
 if not exist "%PREFIX%\bin" mkdir "%PREFIX%\bin"
 
 for %%F in ("%PREFIX%\Library\temurin\bin\*.exe") do (
-    mklink "%PREFIX%\bin\%%~nF.exe" "%%F" >nul 2>&1 || copy "%%F" "%PREFIX%\bin\%%~nF.exe" >nul
+    copy "%%F" "%PREFIX%\bin\%%~nF.exe" >nul
 )
 
 set "JAVA_HOME=%PREFIX%\Library\temurin"
