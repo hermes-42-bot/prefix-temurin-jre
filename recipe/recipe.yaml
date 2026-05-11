@@ -3,9 +3,10 @@
 # This is a personal repackaging for prefix.dev channels.
 
 context:
-  version: "17.0.14"
-  build_number: "7"
-  version_underscore: "17.0.14_7"
+  full_version: "17.0.19+10"
+  version: "${{ full_version | split('+') | first }}"
+  build_number: "${{ full_version | split('+') | last }}"
+  version_underscore: "${{version}}_${{build_number}}"
   base_url: "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${{ version }}%2B${{ build_number }}/OpenJDK17U-jre_"
 
 package:
@@ -13,31 +14,30 @@ package:
   version: ${{ version }}.${{ build_number }}
 
 source:
-  - if: linux and aarch64
-    then:
-      url: ${{ base_url }}aarch64_linux_hotspot_${{ version_underscore }}.tar.gz
-      sha256: bab3f352fc7144ac1435924f056872d16f4b32c8bcda58b9a77b636eb1c664f4
   - if: linux and x86_64
     then:
       url: ${{ base_url }}x64_linux_hotspot_${{ version_underscore }}.tar.gz
-      sha256: a4b0015872758aac6a5d17139e952a3951ee536ae6d9a99828823a80a71add56
-  - if: osx and arm64
-    then:
-      url: ${{ base_url }}aarch64_mac_hotspot_${{ version_underscore }}.tar.gz
-      sha256: 9fb89125d5807f42cec588824fde487be42273a89c55ccfc5f44efda64e03e2c
+      sha256: adb5a2364baa51de1ef91bb9911f5a61d24b045fe1d6647cb8050272a3a8ee75
   - if: osx and x86_64
     then:
       url: ${{ base_url }}x64_mac_hotspot_${{ version_underscore }}.tar.gz
-      sha256: f2c7454f7aba076cd414887b31da92e4a50fda7a13d97f6e295c911af60de0b6
+      sha256: 91bbd07b9c65d9ecbe1fa0081b3c1ad549ed34ed21085a72fdb76598a740b54c
   - if: win
     then:
       url: ${{ base_url }}x64_windows_hotspot_${{ version_underscore }}.zip
-      sha256: d42f84605c8e27c38998b44ac493d1067abbe45be89969c935d71a858393405c
+      sha256: 79a598e1fbb4e16582d92c4ee22280a3c4d72fd52606e1e46b1223c0fe53b0da
 
 build:
-  number: 0
-  script: ${{ "build.sh" if unix else "bld.bat" }}
+  number: 1
+  script:
+    - if: win
+      then: bld.bat
+      else: build.sh
+  prefix_detection:
+    ignore_binary_files: true
   dynamic_linking:
+    binary_relocation: false
+    overlinking_behavior: "ignore"
     missing_dso_allowlist:
       - "*/libc.*"
       - "*/libdl.*"
@@ -65,10 +65,13 @@ build:
 
 requirements:
   build:
-    - if: win
-      then:
-        - m2-bash
   run:
+    - if: linux
+      then: libgcc-ng
+    - if: osx
+      then: libcxx
+    - if: win
+      then: ucrt
     - freetype
 
 tests:
