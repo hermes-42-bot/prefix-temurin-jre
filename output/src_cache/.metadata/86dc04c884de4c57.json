@@ -1,0 +1,15 @@
+{
+  "source_type": "url",
+  "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jre_x64_linux_hotspot_17.0.14_7.tar.gz",
+  "checksum": "a4b0015872758aac6a5d17139e952a3951ee536ae6d9a99828823a80a71add56",
+  "checksum_type": "sha256",
+  "actual_filename": "OpenJDK17U-jre_x64_linux_hotspot_17.0.14_7.tar.gz",
+  "git_commit": null,
+  "git_rev": null,
+  "cache_path": "86dc04c884de4c57_OpenJDK17U-jre_x64_linux_hotspot_17.0.14_7.tar.gz",
+  "extracted_path": "86dc04c884de4c57_extracted",
+  "last_accessed": "2026-05-11T06:13:13.195474005Z",
+  "created": "2026-05-11T06:13:13.195474567Z",
+  "lock_file": "/opt/data/home/workspaces/prefix-temurin-jre/output/src_cache/.locks/86dc04c884de4c57.lock",
+  "attestation_verified": false
+}

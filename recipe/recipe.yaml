@@ -14,20 +14,25 @@ package:
 
 source:
   - if: linux and aarch64
-    url: ${{ base_url }}aarch64_linux_hotspot_${{ version_underscore }}.tar.gz
-    sha256: bab3f352fc7144ac1435924f056872d16f4b32c8bcda58b9a77b636eb1c664f4
+    then:
+      url: ${{ base_url }}aarch64_linux_hotspot_${{ version_underscore }}.tar.gz
+      sha256: bab3f352fc7144ac1435924f056872d16f4b32c8bcda58b9a77b636eb1c664f4
   - if: linux and x86_64
-    url: ${{ base_url }}x64_linux_hotspot_${{ version_underscore }}.tar.gz
-    sha256: a4b0015872758aac6a5d17139e952a3951ee536ae6d9a99828823a80a71add56
+    then:
+      url: ${{ base_url }}x64_linux_hotspot_${{ version_underscore }}.tar.gz
+      sha256: a4b0015872758aac6a5d17139e952a3951ee536ae6d9a99828823a80a71add56
   - if: osx and arm64
-    url: ${{ base_url }}aarch64_mac_hotspot_${{ version_underscore }}.tar.gz
-    sha256: 6921193269a32c394fd6d8bb6583e3798810c2b24f122b56ebe85bafd94fc784
+    then:
+      url: ${{ base_url }}aarch64_mac_hotspot_${{ version_underscore }}.tar.gz
+      sha256: 6921193269a32c394fd6d8bb6583e3798810c2b24f122b56ebe85bafd94fc784
   - if: osx and x86_64
-    url: ${{ base_url }}x64_mac_hotspot_${{ version_underscore }}.tar.gz
-    sha256: f2c7454f7aba076cd414887b31da92e4a50fda7a13d97f6e295c911af60de0b6
+    then:
+      url: ${{ base_url }}x64_mac_hotspot_${{ version_underscore }}.tar.gz
+      sha256: f2c7454f7aba076cd414887b31da92e4a50fda7a13d97f6e295c911af60de0b6
   - if: win
-    url: ${{ base_url }}x64_windows_hotspot_${{ version_underscore }}.zip
-    sha256: d42f84605c8e27c38998b44ac493d1067abbe45be89969c935d71a858393405c
+    then:
+      url: ${{ base_url }}x64_windows_hotspot_${{ version_underscore }}.zip
+      sha256: d42f84605c8e27c38998b44ac493d1067abbe45be89969c935d71a858393405c
 
 build:
   number: 0
@@ -86,7 +91,7 @@ about:
     performance, enterprise-caliber, cross-platform, open-source licensed,
     and Java SE TCK-tested for general use across the Java ecosystem.
     This package repackages the official pre-built JRE binaries from Adoptium.
-  license: GPL-2.0 WITH Classpath-exception-2.0
+  license: GPL-2.0-only WITH Classpath-exception-2.0
   license_file: NOTICE
   homepage: https://adoptium.net/temurin/
   repository: https://github.com/adoptium/temurin17-binaries
