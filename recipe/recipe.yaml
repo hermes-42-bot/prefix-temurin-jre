@@ -24,7 +24,7 @@ source:
   - if: osx and arm64
     then:
       url: ${{ base_url }}aarch64_mac_hotspot_${{ version_underscore }}.tar.gz
-      sha256: 6921193269a32c394fd6d8bb6583e3798810c2b24f122b56ebe85bafd94fc784
+      sha256: 9fb89125d5807f42cec588824fde487be42273a89c55ccfc5f44efda64e03e2c
   - if: osx and x86_64
     then:
       url: ${{ base_url }}x64_mac_hotspot_${{ version_underscore }}.tar.gz
@@ -36,9 +36,7 @@ source:
 
 build:
   number: 0
-  script:
-    - ${{ "build.sh" if unix }}
-    - ${{ "bld.bat" if win }}
+  script: ${{ "build.sh" if unix else "bld.bat" }}
   dynamic_linking:
     missing_dso_allowlist:
       - "*/libc.*"
